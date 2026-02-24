@@ -71,7 +71,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const waLink = qs('[data-cta-whatsapp]');
     const waLabel = qs('[data-cta-whatsapp-label]');
 
-    const baseUrl = 'https://wa.me/5500000000000';
+    const baseUrl = 'https://wa.me/5511964956563';
     const baseText = 'Olá, quero falar sobre a proposta';
 
     const text = planName
@@ -111,6 +111,16 @@ document.addEventListener('DOMContentLoaded', () => {
     updateCTA(planName || null);
   }
 
+  function buildWhatsAppUrl(planName) {
+    const baseUrl = 'https://wa.me/5511964956563';
+    const baseText = 'Olá, quero falar sobre a proposta';
+    const text = planName
+      ? `${baseText}. Quero fechar o Plano ${planName}.`
+      : baseText;
+
+    return `${baseUrl}?text=${encodeURIComponent(text)}`;
+  }
+
   function bindSelectPlan() {
     qsa('[data-select-plan]').forEach(btn => {
       btn.addEventListener('click', () => {
@@ -118,12 +128,9 @@ document.addEventListener('DOMContentLoaded', () => {
         if (!card) return;
         selectPlan(card);
 
-        // Leva o usuário ao CTA final (decisão rápida)
-        const cta = qs('#contato');
-        if (cta) {
-          const top = cta.getBoundingClientRect().top + window.scrollY - getHeaderOffset();
-          window.scrollTo({ top, behavior: 'smooth' });
-        }
+        const planName = card.getAttribute('data-plan-name') || card.querySelector('.plan-name')?.textContent?.trim();
+        const url = buildWhatsAppUrl(planName || null);
+        window.open(url, '_blank', 'noopener,noreferrer');
       });
     });
   }
